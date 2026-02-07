@@ -11,16 +11,33 @@
 
 <body id="tagMainBody">
     <main id="containerWrapper">
+        <dialog class="myModal">
+            <p class="paragraph"> (max or min) range reached</p>
+            <button class="closeMod">Ok</button>
+        </dialog>
         <article class="containerCounter">
-            <button class="handleCount inc"><a>
-                    Increment
-                </a></button>
-            <ul class="listDigit">
-                <li class="numberRepresentation"> 0 </li>
-            </ul>
-            <button class="handleCount dec"><a>
-                    Decrement
-                </a></button>
+            <header class="headMaxMin">
+                <label for="minN">set (N) min</label>
+                <input id="minN" type="number">
+
+                <label for="maxN">set (N) max</label>
+                <input class="maxN" type="number">
+            </header>
+            <footer class="containerButtons">
+                <button class="handleCount dec">
+                    <a>
+                        Decrement
+                    </a>
+                </button>
+                <ul class="listDigit">
+                    <li class="numberRepresentation"> 0 </li>
+                </ul>
+                <button class="handleCount inc">
+                    <a>
+                        Increment
+                    </a>
+                </button>
+            </footer>
         </article>
     </main>
     <script src="js/main.js"></script>
