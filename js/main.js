@@ -4,54 +4,95 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
 
         //init main function 
         (function () {
-            let boxNum = document.querySelector(".numberRepresentation");
             function init() {
-                let count = 0;
+
+                /* *************************************** */
+                //BEGIN STATE // BEGIN STATE
                 let conf = {
                     min: 1,
                     max: 5,
+                    count: 0,
+                    modalOn: false,
+                    PgraphPrefix: ["min", "max"],
+                }
+                //END STATE // END STATE
+                /* *************************************** */
+                //BEGIN LOGIC // BEGIN LOGIC
+                function increment() {
+                    if (conf.count < conf.max) { conf.count++; }
                 }
 
-                function more() {
-                    if (count < conf.max) {
-                        count++;
-                    } else { modal("max") }
-                    render();
+                function decrement() {
+                    if (conf.count >= conf.min) { conf.count--; }
                 }
-                function minus() {
-                    if (count >= conf.min) {
-                        count--;
-                    } else { modal("min") }
-                    render();
+
+                function toggleMod() {
+                    conf.modalOn = !conf.modalOn;
                 }
-                function render() {
-                    console.log(count);
-                    boxNum.textContent = count;
+
+                function minOrMax(newPrefx) {
+                    conf.PgraphPrefix = (conf.PgraphPrefix[0] == newPrefx) ?
+                        conf.PgraphPrefix[1] :
+                        conf.PgraphPrefix[0];
                 }
-                return { mo: more, mi: minus }
+
+                function setMin(newV) {
+                    conf.min = newV;
+                }
+
+                function setMax(newV) {
+                    conf.max = newV;
+                }
+
+                //END LOGIC // END LOGIC
+                /* *************************************** */
+                //BEGIN RENDERS // BEGIN RENDERS
+                function rechargeVal() {
+                    //obtener valores de conf.valor ...en edicion    
+                }
+
+                function renderCounter() {
+                    let boxNum = document.querySelector(".numberRepresentation");
+                    console.log(conf.count);
+                    boxNum.textContent = conf.count;
+                }
+
+                function showMod() {
+                    let mod = document.querySelector(".myModal");
+                    if (conf.modalOn) {
+                        mod.showModal();
+                    } else {
+                        mod.close();
+                    }
+                }
+                //END RENDERS // END RENDERS
+                /* *************************************** */
+
+                return {
+                    mo: increment,
+                    mi: decrement,
+                    modSwtch: toggleMod,
+                    stMn: setMin,
+                    stMx: setMax,
+                }
             }
-            let op = init();
 
+            let op = init();
             let moB = document.querySelector(".inc");
             let miB = document.querySelector(".dec");
 
             moB.addEventListener("click", op.mo);
             miB.addEventListener("click", op.mi);
+            console.log(`END FUNCTION IIFE`);
+            /* ++++***************************************++++ */
+
+            //BEGIN EVENTS // BEGIN EVENTS
+            //END EVENTS // END EVENTS
         })();
         //end init main function
 
-        function modal(status) {
 
-            //STATUS == MAX || MIN
-            let mod = document.querySelector(".myModal");
-            let content = mod.querySelector(".paragraph");
-            content.textContent = `${status == "max" ? "max" : "min"} range reached`;
-            mod.showModal();
 
-            let butClos = document.querySelector(".closeMod");
-            butClos.addEventListener("click", () => {
-                mod.close();
-            });
-        }
+
     });
 }
