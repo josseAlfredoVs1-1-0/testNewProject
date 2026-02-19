@@ -19,21 +19,31 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
                 /* *************************************** */
                 //BEGIN LOGIC // BEGIN LOGIC
                 function increment() {
-                    if (conf.count < conf.max) { conf.count++; }
+                    if (conf.count < conf.max) {
+                        conf.count++;
+                        renderCounter()
+                    }
                 }
 
                 function decrement() {
-                    if (conf.count >= conf.min) { conf.count--; }
+                    if (conf.count >= conf.min) {
+                        conf.count--;
+                        renderCounter()
+                    }
                 }
 
                 function toggleMod() {
-                    conf.modalOn = !conf.modalOn;
+                    if (conf.count > conf.max || conf.count < conf.min) {
+                        conf.modalOn = !conf.modalOn;
+                    } else {
+                        conf.modalOn == false;
+                    }
                 }
 
                 function minOrMax(newPrefx) {
                     conf.PgraphPrefix = (conf.PgraphPrefix[0] == newPrefx) ?
-                        conf.PgraphPrefix[1] :
-                        conf.PgraphPrefix[0];
+                        conf.PgraphPrefix[0] :
+                        conf.PgraphPrefix[1];
                 }
 
                 function setMin(newV) {
@@ -46,10 +56,6 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
 
                 //END LOGIC // END LOGIC
                 /* *************************************** */
-                //BEGIN RENDERS // BEGIN RENDERS
-                function rechargeVal() {
-                    //obtener valores de conf.valor ...en edicion    
-                }
 
                 function renderCounter() {
                     let boxNum = document.querySelector(".numberRepresentation");
@@ -59,6 +65,7 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
 
                 function showMod() {
                     let mod = document.querySelector(".myModal");
+                    console.log(`mod Status: ${conf.modalOn}`);
                     if (conf.modalOn) {
                         mod.showModal();
                     } else {
@@ -74,6 +81,8 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
                     modSwtch: toggleMod,
                     stMn: setMin,
                     stMx: setMax,
+                    rdr: renderCounter,
+                    shwMod: showMod,
                 }
             }
 
@@ -81,8 +90,16 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
             let moB = document.querySelector(".inc");
             let miB = document.querySelector(".dec");
 
+            /* RENDER WITH RESOURCE LOADED */
+            window.addEventListener("load", op.rdr);
+            document.querySelector(".handleCount").addEventListener("change", op.modSwtch);
+            document.querySelector(".handleCount").addEventListener("change", op.shwMod);
+
             moB.addEventListener("click", op.mo);
             miB.addEventListener("click", op.mi);
+
+            let newMin = document.querySelector("#stMinN");
+            let newMax = document.querySelector("#stMaxN");
             console.log(`END FUNCTION IIFE`);
             /* ++++***************************************++++ */
 
