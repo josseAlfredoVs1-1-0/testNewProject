@@ -22,22 +22,23 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
                     if (conf.count < conf.max) {
                         conf.count++;
                         renderCounter()
+                    } else {
+                        toggleMod();
                     }
                 }
 
                 function decrement() {
-                    if (conf.count >= conf.min) {
+                    if (conf.count > conf.min) {
                         conf.count--;
                         renderCounter()
+                    } else {
+                        toggleMod();
                     }
                 }
 
                 function toggleMod() {
-                    if (conf.count > conf.max || conf.count < conf.min) {
-                        conf.modalOn = !conf.modalOn;
-                    } else {
-                        conf.modalOn == false;
-                    }
+                    conf.modalOn = !conf.modalOn;
+                    showMod();
                 }
 
                 function minOrMax(newPrefx) {
@@ -47,11 +48,17 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
                 }
 
                 function setMin(newV) {
-                    conf.min = newV;
+                    let va = newV.target.value;
+                    conf.min = va;
+                    console.log(`min set to: ${conf.min}`);
+                    if (conf.count < va) { conf.count = va }
                 }
-
+                
                 function setMax(newV) {
-                    conf.max = newV;
+                    let va = newV.target.value;
+                    conf.max = va;
+                    console.log(`max set to: ${conf.max}`);
+                    if (conf.count > va) { conf.count = va }
                 }
 
                 //END LOGIC // END LOGIC
@@ -89,17 +96,24 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
             let op = init();
             let moB = document.querySelector(".inc");
             let miB = document.querySelector(".dec");
-
-            /* RENDER WITH RESOURCE LOADED */
-            window.addEventListener("load", op.rdr);
-            document.querySelector(".handleCount").addEventListener("change", op.modSwtch);
-            document.querySelector(".handleCount").addEventListener("change", op.shwMod);
-
             moB.addEventListener("click", op.mo);
             miB.addEventListener("click", op.mi);
 
-            let newMin = document.querySelector("#stMinN");
-            let newMax = document.querySelector("#stMaxN");
+            /* RENDER WITH RESOURCE LOADED INIT PROGRAM*/
+            window.addEventListener("load", op.rdr);
+            /***************************************** */
+
+            let closMod = document.querySelector(".closeMod");
+            closMod.addEventListener("click", op.modSwtch);
+
+
+            let newMin = document.querySelector("#minN");
+            let newMax = document.querySelector("#maxN");
+            newMin.addEventListener("input", op.stMn);
+            newMax.addEventListener("input", op.stMx);
+            newMin.addEventListener("change", op.rdr);
+            newMax.addEventListener("change", op.rdr);
+
             console.log(`END FUNCTION IIFE`);
             /* ++++***************************************++++ */
 
