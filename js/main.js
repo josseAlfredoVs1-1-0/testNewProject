@@ -2,7 +2,7 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
     document.addEventListener("DOMContentLoaded", () => {
         console.log(`DOM CONTENT LOADED OK`);
 
-        //init main function 
+        /* *************************************** */
 
         /* *************************************** */
         //BEGIN STATE // BEGIN STATE
@@ -17,11 +17,12 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
         closMod.addEventListener("click", toggleMod);
         moB.addEventListener("click", increment);
         miB.addEventListener("click", decrement);
-        newMin.addEventListener("input", setMin);
-        newMax.addEventListener("input", setMax);
+        newMin.addEventListener("change", setMin);
+        newMax.addEventListener("change", setMax);
 
         /***************************************** */
 
+        //BEGIN STATE // BEGIN STATE
         let conf = {
             min: 1,
             max: 5,
@@ -29,14 +30,22 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
             modalOn: false,
             PgraphPrefix: ["min", "max"],
         }
+        console.log(`typeof max: ${typeof conf.max}`);
         //END STATE // END STATE
+
+        /* *********  first render app **********/
+
         /* *************************************** */
         //BEGIN LOGIC // BEGIN LOGIC
 
+        function setState(updater) {
+            updater(conf);
+            renderG();
+        }
+
         function increment() {
             if (conf.count < conf.max) {
-                conf.count++;
-                renderCounter()
+                setState((s) => s.count++);
             } else {
                 toggleMod();
             }
@@ -44,16 +53,15 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
 
         function decrement() {
             if (conf.count > conf.min) {
-                conf.count--;
-                renderCounter()
+                setState((s) => s.count--);
             } else {
                 toggleMod();
             }
         }
 
         function toggleMod() {
-            conf.modalOn = !conf.modalOn;
-            showMod();
+            setState((s) => conf.modalOn == false ? s.modalOn = true : s.modalOn = false)
+            renderG();
         }
 
         function minOrMax(newPrefx) {
@@ -64,36 +72,46 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
 
         function setMin(newV) {
             let va = newV.target.value;
-            conf.min = va;
-            console.log(`min set to: ${conf.min}`);
-            if (conf.count < va) { conf.count = va }
+            setState((s) => s.min = Number(va));
+            console.log(`min set to: ${conf.min} - typeof : ${typeof conf.min}`);
+            if (conf.count < conf.min) { setState((s) => s.count = conf.min) }
+            if (conf.min > conf.max) { setState((s) => s.max = conf.min + 1) }
         }
 
         function setMax(newV) {
             let va = newV.target.value;
-            conf.max = va;
+            setState((s) => s.max = Number(va));
             console.log(`max set to: ${conf.max}`);
-            if (conf.count > va) { conf.count = va }
+            if (conf.count > conf.max) { setState((s) => s.count = conf.max) }
+            if (conf.max <= conf.min) { setState((s) => s.min = conf.max - 1) }
         }
 
         //END LOGIC // END LOGIC
         /* *************************************** */
         function renderG() {
-
+            renderCounter();
+            showMod();
+            rdrInp();
         }
 
         function renderCounter() {
-            console.log(conf.count);
+            console.log("", conf.count);
             boxNum.textContent = conf.count;
         }
 
         function showMod() {
-            console.log(`mod Status: ${conf.modalOn}`);
+            console.log("Modal function ejecuted", conf.modalOn)
             if (conf.modalOn) {
                 mod.showModal();
             } else {
                 mod.close();
             }
+        }
+
+        function rdrInp() {
+            console.log(`current values:\nin min: ${conf.min}\nin max: ${conf.max}`);
+            newMax.value = conf.max;
+            newMin.value = conf.min;
         }
         //END RENDERS // END RENDERS
         /* *************************************** */
@@ -103,5 +121,6 @@ if (typeof window !== "undefined" && typeof document !== "undefined") {
         //BEGIN EVENTS // BEGIN EVENTS
         //END EVENTS // END EVENTS
         //end init main function
+        renderCounter();
     })
 }
